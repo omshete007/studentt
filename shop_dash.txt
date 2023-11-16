@@ -1,0 +1,30 @@
+<?php
+// Connect to the database
+$db = new mysqli("localhost", "your_username", "your_password", "your_database");
+
+// Retrieve print requests from the database
+$query = "SELECT * FROM print_requests";
+$result = $db->query($query);
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $requestTitle = $row['requestTitle'];
+        $description = $row['description'];
+        $printFile = $row['printFile']; // File path
+
+        // Display the print request details in your dashboard
+        echo "<h2>$requestTitle</h2>";
+        echo "<p>Description: $description</p>";
+
+        // Display a link to the uploaded file
+        echo "<p><a href='$printFile' target='_blank'>View Document</a></p>";
+    }
+
+    $result->free();
+} else {
+    echo "No print requests found.";
+}
+
+// Close the database connection
+$db->close();
+?>

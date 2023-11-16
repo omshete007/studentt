@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopkeeper Dashboard</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-warning">
+        <div class="container">
+            <h1 class="navbar-brand">Shopkeeper Dashboard</h1>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        Order Summary
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <h4>Pending Orders</h4>
+                                <p>5</p>
+                            </div>
+                            <div class="col">
+                                <h4>Completed Orders</h4>
+                                <p>10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h2>Order Details</h2>
+          <?php
+// Connect to the MySQL database (replace with your actual database credentials)
+$mysqli = new mysqli("localhost", "username", "password", "print_requests");
+
+// Check connection
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+// Retrieve print requests from the database
+$sql = "SELECT * FROM requests";
+$result = $mysqli->query($sql);
+
+// Check if there are any requests
+if ($result->num_rows > 0) {
+    echo "<h1>Print Requests</h1>";
+
+    // Output data of each row
+    while ($row = $result->fetch_assoc()) {
+        echo "<div>";
+        echo "<h3>Request Title: " . $row['requestTitle'] . "</h3>";
+        echo "<p>Description: " . $row['description'] . "</p>";
+        echo "<p>Number of Copies: " . $row['numberOfCopies'] . "</p>";
+        echo "<p>Paper Size: " . $row['paperSize'] . "</p>";
+        echo "<p>Color: " . $row['color'] . "</p>";
+        echo "<p>Upload File Path: " . $row['uploadFilePath'] . "</p>";
+        echo "<p>Customer Name: " . $row['customerName'] . "</p>";
+        // Add more fields as needed
+
+        echo "<button onclick=\"processRequest(" . $row['id'] . ")\">Process Request</button>";
+        echo "</div>";
+    }
+} else {
+    echo "<p>No print requests available.</p>";
+}
+
+// Close the database connection
+$mysqli->close();
+?>
+<script>
+    function processRequest(requestId) {
+        // Implement the logic to process the request
+        // This could involve updating the request status in the database, notifying the student, etc.
+        alert("Request processed for ID: " + requestId);
+    }
+</script>
+
+    <!-- Pending Requests List -->
+    <div class="container my-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h2>Pending Requests</h2>
+            </div>
+            <div class="card-body">
+                <ul class="list-group" id="pendingRequestsList">
+                    <li class="list-group-item">Request 1 <button class="btn btn-primary float-right" onclick="processRequest(1)">Process</button></li>
+                    <li class="list-group-item">Request 2 <button class="btn btn-primary float-right" onclick="processRequest(2)">Process</button></li>
+                    <li class="list-group-item">Request 3 <button class="btn btn-primary float-right" onclick="processRequest(3)">Process</button></li>
+                    <!-- Add more pending requests here -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+  
+</body>
+</html>
